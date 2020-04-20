@@ -2,8 +2,10 @@ import json
 import requests
 import pprint
 import wx
+import pyperclip
+import webbrowser
 
-api_key = 'v^1.1#i^1#p^1#I^3#r^0#f^0#t^H4sIAAAAAAAAAOVYfWwURRTvXb9oSkUTooYQc24hRuD2Zr96dwt3eLTFXmivR+9oaVHr7O5su/T2I7tztIegTaVNADEq8Q/9AxuDxsQQQ6JRCYlRUSMIKMQYq6KExBCVPzAElBh1d3uUa0W+eoYm3j+XefPmze/93nszbwcMVlQtGmkauVDjqfSODoJBr8dDVYOqivLFt5V655WXgAIFz+jggsGyodLTyyyoZgy+DVmGrlnIN6BmNIt3hREia2q8Di3F4jWoIovHIp+KtTTzNAl4w9SxLuoZwhdviBCCBCWGo4IQMUCmw6wt1S7ZTOv2PBUU6+QwEEJ1siBTyJ63rCyKaxaGGo4QNKCBH7B+GqQpjmcBz3EkzYEuwteOTEvRNVuFBETUhcu7a80CrFeHCi0Lmdg2QkTjsZWp1li8oTGRXhYosBXN85DCEGetyaN6XUK+dpjJoqtvY7nafCorisiyiEB0fIfJRvnYJTA3Ad+lWg7RkozYsBQKMTTNMkWhcqVuqhBfHYcjUSS/7KrySMMKzl2LUZsNYT0ScX6UsE3EG3zO3+oszCiygswI0bgi1hlLJolok671mNlUr1+FfcifbGvwwyAMy7LEMX4kSDTFyGx+k3FLeYqn7FKva5LiEGb5EjpegWzEaCovTAEvtlKr1mrGZOygKdQLXuKP5bqcgI5HMIt7NSemSLVJ8LnDa7M/sRpjUxGyGE1YmDrh0hMhoGEoEjF10s3DfOoMWBGiF2ODDwT6+/vJfobUzZ4ADQAVWNvSnBJ7kQqJvK5T6wOWcu0FfsV1RbRL1Nbncc6wsQzYeWoD0HqIKEtRgAvleZ8MKzpV+g9Bgc+BydVQrOoQAF3HCaLAimIQMnV0Maojmk/QgIMDCTBn56fZh7CRgSLyi3aeZVVkKhLPcDLNhGTkl+rCsp+1M9cvcFKdn5IRAggJghgO/V+K5HrTPIVEE+Gi5XlRcjyOWCSgBxMyyrXHNrJJZk0nFNNcYNVa1MgGe3tWdXR2dQTbmaZVbOR6K+HKzou6gZJ6RhFzRWTAqfUisMCYUhKaOJdCmYwtmJajluPozAqys96yDUBDIZ2iJkVdDejQPs0dUbeLeFo+xwwjrqpZDIUMihfvJL8Fp/gV3VPsHmdG+WTHbzyQijTenJBuNElrg0iayNKzpt2Xka3OfZ3W+5Bmn4DY1DMZZLZT0w70rYqvU+v/wscNXBQ353dxO5SZktdiRrHTp3umefafR1OBM+wWprhQkAkHaY6bll/1bjzTuZl2/zTpFkbSjTTSZcHrbKUDkz/qoyXujxryvAWGPHu9Hg8IgIVULbi3onRNWenseZaCEalAmbSUHs3+VjUR2YdyBlRMb4XHWAN/WljwjDD6MLh74iGhqpSqLnhVAPMvz5RTc+6qsSlhaUBxLOC4LlB7ebaMurNs7uHTw7tPR5Qtb7RlX/5s1ligeng2BDUTSh5PeUnZkKfknj1rd/arL1V9c2TgY7xaP7svtK5+9cEjRs0Px3954fVdiUW3f760au6Zv+Qd6T+PPjqqd82Szs0ZYBacnx979XxzQ/KUuR629m7fFO7fdbjqlecDy4N3hOjWyuH7n12UpE/et2vfllOPbX7Kgy488vPb/sNfbjr2wUFqdBse2rpsibJn+YGNw32JsbNN69oe/6Ll+ANfkbTS+U638eaL9St276gdOdRY07Y0c+6ct8Nb+ekfjR+eVD45+F3Hmc2JX0fG3j2afO/CiVnb9/72+5PPtX+05P31TxxSN/Tsr3joQKKymxa+rQ0d47Lyjxt2HgtXbGvZ2vf9Rq98sXnP/q/3jp14+qI6WO17bWjxM+Ph+xvaeNgQ4BEAAA=='
+api_key = 'v^1.1#i^1#I^3#r^0#f^0#p^1#t^H4sIAAAAAAAAAOVYa2wUVRTu9kVIaYkBlTQQtoONEd3ZO4/d2R27qwul7Vr6oLsUWiXkzsyd7bC7M5OZu21XoynlFTXxbTAISYOJkRiIiELUECJE/hj1ByQS4w9ATUr90YhRIonine1SthV5dQ1N3D+bOffcc7/zne/ce2fAUOXc5dtbtl+qds0pHRkCQ6UuF1MF5lZWPFxTVlpbUQIKHFwjQw8MlQ+XjTbYMJ0yxS5km4ZuI/dgOqXbYs4YojKWLhrQ1mxRh2lki1gWY5G21SJLA9G0DGzIRopyRxtDlF/1A8bnD3BSQFH8kkqs+tWYcSNEKUggHirrR5IMFMSScdvOoKhuY6jjEMUCFngA72FBnBFEnhEZgRYY0Eu5u5Fla4ZOXGhAhXNwxdxcqwDrjaFC20YWJkGocDTSFOuIRBtXtccbvAWxwnkeYhjijD31aaWhIHc3TGXQjZexc95iLCPLyLYpb3hihalBxchVMHcAf4JqwAZZIAdYBXIBIYiKQmWTYaUhvjEOx6IpHjXnKiIdazh7M0YJG9ImJOP8UzsJEW10O39rMjClqRqyQtSqFZGeSGcnFW4x9ISVifV50jCJPJ1djR4owKCqKj7OgySFZTiVzy8yESlP8bRVVhq6ojmE2e52A69ABDGazgtXwAtx6tA7rIiKHTSFfsGr/AG+1ynoRAUzuE93aorShAR37vHm7E/OxtjSpAxGkxGmD+ToCVHQNDWFmj6Y02FeOoN2iOrD2BS93oGBAXqAow0r4WUBYLzr21bH5D6UhlTe1+n1QVu7+QSPlktFJroi/iLOmgTLINEpAaAnqDDPMMAXyPM+FVZ4uvUfhoKcvVO7oVjdAVk+yAHWz0HE+gSZL0Z3hPMC9To4kASzRJ9WEmEzBWXkkYnOMmlkaYrI+VSWC6jIo/iDqocnyvVIPsXvYVSEAEKSJAcD/5cmuVWZx5BsIVw0nRdF41HEIwk1t6so2x15mu/k1vZAOe7ztq5Hq3ihL9G6rqd3ndDNtbTyoVvthOsnLxsm6jRSmpwtIgNOrxeBBc5SOqGFszGUShHDjBK1nURnV5Gd+TYJAE2Ndpqalo2014BkN3dMG3OIZ5RzxDSj6XQGQymFosXbye/CLn7d9DRyx5lVOZH6TRRSUyYuJ3SumrTdL9MWso2MRe5ldIdzXseNJNLJDogtI5VCVjcz40Lfrfo6vf4vfNzGQXFneRf3hjJbdC2nNCKfjbMts/+8mhqcZacw4wsIPOB5QZhRXitz9YxnZ9v502LYGCm3c5EuF27xKu2d+lIfLsn9mGHXx2DYdbDU5QJeUM8sA3WVZWvLy+bV2hpGtAZV2tYSOnlXtRCdRFkTalZppctcC8fqCz4jjGwAiyY/JMwtY6oKviqAxddGKpj591cTSngWMALpS6EXLLs2Ws7cV75wPPr728/trfqw7evnx6TPXx+c98a2H0H1pJPLVVFSPuwqaR69uDl4sm4T3vHXJ6O7dowdXNGUMM7ey2XooHx+je/Qkx0njp5v6d//4uM0u2Tr/rHEyOkthxTp4qXYhfbd4VeePfVbw6vVoKvVHVvELm55LLq05WjrPsa9sOf9sfHvthwZu2LWnfSlNjSUXD7w2i8LdlZF/zy1OHrPuhPLjiyoTF5ecm5/4zff1tX8cHxjZn3VU8lKqXnfT3vaa/q3NFmHYdeVL7eBN7d7dx1/b/mj8dMP7AnVf7C7i66cv3fpgWRQ+uitJ/DhPT8v39HevXX85YEH5/Q/c+bymY62pi/Kjp2rGTU/pTzaVxfe9TXve+FYbSt3snbwnb31m399pOLsH2WfpV/6Pr6zdfyhifL9DXOQYZLgEQAA'
 
 
 class MyFrame(wx.Frame):
@@ -30,7 +32,17 @@ class MyFrame(wx.Frame):
         self.price = wx.StaticText(self.panel, pos=(290, 270))
 
         self.ans5 = wx.TextCtrl(self.panel, size=(0, 0))
-        self.ans6 = wx.TextCtrl(self.panel, size=(0, 0))
+        self.ans6 = wx.Choice(self.panel)
+        self.ans6.Hide()
+        self.ans7 = wx.TextCtrl(self.panel, size=(0, 0))
+
+        fire = (wx.Image('fire_1f525.png', wx.BITMAP_TYPE_ANY).Rescale(30,30)).ConvertToBitmap()
+        self.fire1 = wx.StaticBitmap(self.panel, bitmap=fire, pos=(240, 350))
+        self.fire2 = wx.StaticBitmap(self.panel, bitmap=fire, pos=(270, 350))
+        self.fire3 = wx.StaticBitmap(self.panel, bitmap=fire, pos=(300, 350))
+        self.fire1.Hide()
+        self.fire2.Hide()
+        self.fire3.Hide()
 
         self.Show()
 
@@ -78,22 +90,50 @@ class MyFrame(wx.Frame):
             self.price.SetLabel('$' + str(round(100 * float(self.ans3.GetValue()) * (1 - float(an4_value) / 100)) / 100))
             wx.StaticText(self.panel, label='Description:', pos=(10, 320))
             self.ans5 = wx.TextCtrl(self.panel, pos=(90, 318), size=(360, 24))
-            wx.StaticText(self.panel, label='Your name:', pos=(10, 350))
-            self.ans6 = wx.TextCtrl(self.panel, pos=(90, 348), size=(120, 24))
-            generate_btn = wx.Button(self.panel, label='Generate Message!', pos=(10, 380), size=(150, 24))
+            wx.StaticText(self.panel, label='Urgency:', pos=(10, 350))
+            self.ans6 = wx.Choice(self.panel, choices=['1 week', '1 month', 'more than 1 month'], pos=(90, 348), size=(90, 24))
+            self.ans6.Show()
+            wx.StaticText(self.panel, label='Your name:', pos=(10, 380))
+            self.ans7 = wx.TextCtrl(self.panel, pos=(90, 378), size=(120, 24))
+            generate_btn = wx.Button(self.panel, label='Generate Message!', pos=(10, 410), size=(150, 24))
             generate_btn.Bind(wx.EVT_BUTTON, self.on_press_3)
 
 
     def on_press_3(self, event):
         ans5_value = self.ans5.GetValue()
-        ans6_value = self.ans6.GetValue()
-        if ans5_value and ans6_value:
-            wx.TextCtrl(self.panel, value='Hi! My name is ' + ans6_value + '. '
-                          + 'I would like to sell the ' + self.ans1.GetValue() + '. '
-                          + ans5_value, pos=(10, 410), size=(480, 24))
+        ans6_value = self.ans6.GetStringSelection()
+        ans7_value = self.ans7.GetValue()
+        if ans5_value and ans6_value and ans7_value:
+            fire = (wx.Image('fire_1f525.png', wx.BITMAP_TYPE_ANY).Rescale(30,30)).ConvertToBitmap()
 
-        png = wx.Image('grinning-face-with-smiling-eyes_1f601.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self.panel, bitmap=png, pos=(540, 350))
+            if ans6_value == '1 week':
+                self.fire1.Show()
+                self.fire2.Show()
+                self.fire3.Show()
+            elif ans6_value == '1 month':
+                self.fire1.Show()
+                self.fire2.Show()
+                self.fire3.Hide()
+            elif ans6_value == 'more':
+                self.fire1.Show()
+                self.fire2.Hide()
+                self.fire3.Hide()
+
+            message = wx.TextCtrl(self.panel, value='Hi! My name is ' + ans7_value + '. '
+                          + 'I would like to sell the ' + self.ans1.GetValue() + '.\n'
+                          + ans5_value
+                          + 'I need to find a buyer in ' + ans6_value + '.', pos=(10, 440), size=(480, 48), style=wx.TE_READONLY)
+            pyperclip.copy(message.GetValue())
+
+            smile = wx.Image('grinning-face-with-smiling-eyes_1f601.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+            wx.StaticBitmap(self.panel, bitmap=smile, pos=(540, 270))
+
+            post_btn = wx.Button(self.panel, label='Post to Facebook!', pos=(10, 500), size=(150, 24))
+            post_btn.Bind(wx.EVT_BUTTON, self.on_press_4)
+
+
+    def on_press_4(self, event):
+            webbrowser.open('https://www.facebook.com/')
 
 
 def main():
