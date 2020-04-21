@@ -10,7 +10,7 @@ api_key = 'v^1.1#i^1#I^3#r^0#f^0#p^1#t^H4sIAAAAAAAAAOVYa2wUVRTu9kVIaYkBlTQQtoONE
 
 class MyFrame(wx.Frame):
     def __init__(self, parent):
-        wx.Frame.__init__(self, parent, title='Make', size=(800, 600))
+        wx.Frame.__init__(self, parent, title='EaseTrade', size=(800, 600))
 
         self.panel = wx.Panel(self)
 
