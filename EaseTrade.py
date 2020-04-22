@@ -2,10 +2,11 @@ import json
 import requests
 import pprint
 import wx
+import wx.lib.agw.hyperlink as hl
 import pyperclip
 import webbrowser
 
-api_key = 'v^1.1#i^1#I^3#r^0#f^0#p^1#t^H4sIAAAAAAAAAOVYa2wUVRTu9kVIaYkBlTQQtoONEd3ZO4/d2R27qwul7Vr6oLsUWiXkzsyd7bC7M5OZu21XoynlFTXxbTAISYOJkRiIiELUECJE/hj1ByQS4w9ATUr90YhRIonine1SthV5dQ1N3D+bOffcc7/zne/ce2fAUOXc5dtbtl+qds0pHRkCQ6UuF1MF5lZWPFxTVlpbUQIKHFwjQw8MlQ+XjTbYMJ0yxS5km4ZuI/dgOqXbYs4YojKWLhrQ1mxRh2lki1gWY5G21SJLA9G0DGzIRopyRxtDlF/1A8bnD3BSQFH8kkqs+tWYcSNEKUggHirrR5IMFMSScdvOoKhuY6jjEMUCFngA72FBnBFEnhEZgRYY0Eu5u5Fla4ZOXGhAhXNwxdxcqwDrjaFC20YWJkGocDTSFOuIRBtXtccbvAWxwnkeYhjijD31aaWhIHc3TGXQjZexc95iLCPLyLYpb3hihalBxchVMHcAf4JqwAZZIAdYBXIBIYiKQmWTYaUhvjEOx6IpHjXnKiIdazh7M0YJG9ImJOP8UzsJEW10O39rMjClqRqyQtSqFZGeSGcnFW4x9ISVifV50jCJPJ1djR4owKCqKj7OgySFZTiVzy8yESlP8bRVVhq6ojmE2e52A69ABDGazgtXwAtx6tA7rIiKHTSFfsGr/AG+1ynoRAUzuE93aorShAR37vHm7E/OxtjSpAxGkxGmD+ToCVHQNDWFmj6Y02FeOoN2iOrD2BS93oGBAXqAow0r4WUBYLzr21bH5D6UhlTe1+n1QVu7+QSPlktFJroi/iLOmgTLINEpAaAnqDDPMMAXyPM+FVZ4uvUfhoKcvVO7oVjdAVk+yAHWz0HE+gSZL0Z3hPMC9To4kASzRJ9WEmEzBWXkkYnOMmlkaYrI+VSWC6jIo/iDqocnyvVIPsXvYVSEAEKSJAcD/5cmuVWZx5BsIVw0nRdF41HEIwk1t6so2x15mu/k1vZAOe7ztq5Hq3ihL9G6rqd3ndDNtbTyoVvthOsnLxsm6jRSmpwtIgNOrxeBBc5SOqGFszGUShHDjBK1nURnV5Gd+TYJAE2Ndpqalo2014BkN3dMG3OIZ5RzxDSj6XQGQymFosXbye/CLn7d9DRyx5lVOZH6TRRSUyYuJ3SumrTdL9MWso2MRe5ldIdzXseNJNLJDogtI5VCVjcz40Lfrfo6vf4vfNzGQXFneRf3hjJbdC2nNCKfjbMts/+8mhqcZacw4wsIPOB5QZhRXitz9YxnZ9v502LYGCm3c5EuF27xKu2d+lIfLsn9mGHXx2DYdbDU5QJeUM8sA3WVZWvLy+bV2hpGtAZV2tYSOnlXtRCdRFkTalZppctcC8fqCz4jjGwAiyY/JMwtY6oKviqAxddGKpj591cTSngWMALpS6EXLLs2Ws7cV75wPPr728/trfqw7evnx6TPXx+c98a2H0H1pJPLVVFSPuwqaR69uDl4sm4T3vHXJ6O7dowdXNGUMM7ey2XooHx+je/Qkx0njp5v6d//4uM0u2Tr/rHEyOkthxTp4qXYhfbd4VeePfVbw6vVoKvVHVvELm55LLq05WjrPsa9sOf9sfHvthwZu2LWnfSlNjSUXD7w2i8LdlZF/zy1OHrPuhPLjiyoTF5ecm5/4zff1tX8cHxjZn3VU8lKqXnfT3vaa/q3NFmHYdeVL7eBN7d7dx1/b/mj8dMP7AnVf7C7i66cv3fpgWRQ+uitJ/DhPT8v39HevXX85YEH5/Q/c+bymY62pi/Kjp2rGTU/pTzaVxfe9TXve+FYbSt3snbwnb31m399pOLsH2WfpV/6Pr6zdfyhifL9DXOQYZLgEQAA'
+api_key = 'v^1.1#i^1#p^1#f^0#r^0#I^3#t^H4sIAAAAAAAAAOVYfWwURRS/a6/FAoWgBJAAngtEI9ze7Md9Ldwl1w/sUWgrdz1oA5LZ3dm7tXe7m5052iMhKTViEIMgoEKMaU3URANBBBKNAST4lRD8xxBjoiEGCzExIUYDESLuXo9yrchXz9DE++eyb968+b3f+72Z2QW91TVPbWnacrnWOaGivxf0VjidzCRQU121aEplxewqByhxcPb3Luh19VVeXIphNmMIqxA2dA0jd082o2GhYAxTOVMTdIhVLGgwi7BAJCEeXblCYGkgGKZOdEnPUO5YQ5gSJb8EEMvLPsj6JEm2rNqNmAk9TPkVxLLIJwUkNsSL0G+NY5xDMQ0TqJEwxQIWeADvYdkE4xc4v8ACGgRCnZQ7iUys6prlQgMqUoArFOaaJVhvDxVijExiBaEiseiyeGs01tDYkljqLYkVKfIQJ5Dk8Minel1G7iTM5NDtl8EFbyGekySEMeWNDK0wMqgQvQHmPuAXqObYIMPLgGH5oAxFBZWFymW6mYXk9jhsiyp7lIKrgDSikvydGLXYEJ9DEik+tVghYg1u+++ZHMyoiorMMNVYF+2ItrVRkSZdS5m5eNqThV3I07aqwQMDMKQoso/zIFFmGU7hi4sMRSpSPGqVel2TVZsw7G7RSR2yEKPRvLAlvFhOrVqrGVWIjabULzjMn6/TLuhQBXMkrdk1RVmLBHfh8c7sD88mxFTFHEHDEUYPFOgJU9AwVJkaPVjQYVE6PThMpQkxBK+3u7ub7uZo3Ux5WQAY75qVK+JSGmUhVfS1e70Hq3ee4FELqUiWrix/geQNC0uPpVMLgJaiIjzDAF+wyPtIWJHR1n8YSnL2juyGcnVHgOdYFEKcT1QCoj/IlqM7IkWBem0cSIR5S59mFyJGBkrII1k6y2WRqcoC51NYLqggj+wPKR7eUq5H9Ml+D6MgBBASRSkU/L80yd3KPI4kE5Gy6bwsGo8hHono6RYF5ZPRjXwb194BpYTP27wGNfKBdKp5dUfn6kCSa2rmw3fbCbdOXtIN1KZnVClfRgbsXi8DC5wpt0GT5OMok7EMY0oU24mOryLb87EVABoqbTc1LelZrw6t3dw2rS8gHlPOUcOIZbM5AsUMipVvJ38Au/gt01OtO864ysmq31AhVXnockIXqknjDRJtIqznTOteRrfa53VC70KatQMSU89kkJlkxlzoB1Vfu9f/hY97OCjuL+/y3lDGi66ljGrJZ/14y+w/r6YKx9kpzPiCAV+A44JgTHnVF+qZyI+386dJxwTJ93KRdgXu8irtHflSH3EUfkyf8wjoc35Y4XQCL1jIzAePV1e2uyonz8YqQbQKFRqrKc16VzUR3YXyBlTNimqn0Q5/WVjyGaF/HZg1/CGhppKZVPJVAcy5OVLFTJ1Za1HCsyzj5/ws6ATzb466mBmu6XWX95BD075t+f36T5c2n97zyBPLz+4HtcNOTmeVw9XndMTp5PZfF6RnZpzJJz/buvX4wOEK89XmCZ7V0xZP3L577sy5dV0HdnZf61147OW31U3zl1y9Jjqy5s9TEnsPbfxrcPDknvTaMwPn1oYadgSunFtw/MJ7l/rrp+PJL0pzrv65lxzNH5H713/65slvOvSHd9R8x1z7IXxFmPvxu5pj1h/zDHxJin1Jbz3wbBI1vLXv8CnHueZ1cN/536KPkqkH1HlfXwen1i3+InZ64gnHa9JA87bn28/Xgl17Hzr41aLl0z9fPPWdtUeX/ujdtej7WfNSjV1Lzm+akTj4QsOZza9IenoD/dLrV3fPHqwSL3xSzwdmDD62LUUP7JjkOnH24uD+bas+euPYB6fz7w+V72/1oFcJ4BEAAA=='
 
 
 class MyFrame(wx.Frame):
@@ -23,9 +24,10 @@ class MyFrame(wx.Frame):
         search_btn = wx.Button(self.panel, label='Search', pos=(80, 70), size=(60, 24))
         search_btn.Bind(wx.EVT_BUTTON, self.on_press_1)
 
+
         self.results = [None] * 10
         for i in range(10):
-            self.results[i] = wx.StaticText(self.panel, pos=(10, 100 + 15 * i))
+            self.results[i] = hl.HyperLinkCtrl(self.panel, pos=(10, 100 + 15 * i))
 
         self.ans3 = wx.TextCtrl(self.panel, size=(0, 0))
         self.ans4 = wx.TextCtrl(self.panel, size=(0, 0))
@@ -73,7 +75,9 @@ class MyFrame(wx.Frame):
                                          + itemSummary['price']['value'] + ', '
                                          + itemSummary['condition'] + ', '
                                          + itemSummary['title'])
+                self.results[i].SetURL(itemSummary['itemWebUrl'])
                 i = i + 1
+
 
             wx.StaticText(self.panel, label='$', pos=(10, 270))
             self.ans3 = wx.TextCtrl(self.panel, pos=(20, 268), size=(60, 24))
